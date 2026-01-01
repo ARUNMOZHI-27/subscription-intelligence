@@ -1,0 +1,6 @@
+streamlit
+rich
+requests
+python-dotenv
+pydantic
+matplotlib

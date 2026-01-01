@@ -1,0 +1,60 @@
+[
+  {
+    "name": "Gemini AI",
+    "trial_end_date": "2025-12-31",
+    "billing_start_date": "2026-01-01",
+    "monthly_cost": 1950,
+    "category": "productivity",
+    "last_billed_amount": 1950,
+    "auto_pay": true,
+    "notified": [
+      "trial_1",
+      "renew_1",
+      "billing_started"
+    ]
+  },
+  {
+    "name": "YouTube Music",
+    "trial_end_date": "03-05-2026",
+    "billing_start_date": "04-05-2026",
+    "monthly_cost": 189,
+    "category": "Entertainment",
+    "notified": []
+  },
+  {
+    "name": "spotify",
+    "trial_end_date": "03-03-2026",
+    "billing_start_date": "04-03-2026",
+    "category": "Entertainment",
+    "monthly_cost": 199,
+    "renewal_date": "2026-01-02",
+    "auto_pay": true,
+    "notified": [
+      "renew_1"
+    ],
+    "last_billed_amount": 199
+  },
+  {
+    "name": "chatgpt",
+    "monthly_cost": 1997,
+    "auto_pay": true,
+    "trial_end_date": null,
+    "billing_start_date": "24-11-2025",
+    "notified": [
+      "billing_started"
+    ],
+    "last_billed_amount": 1997
+  },
+  {
+    "name": "netflix",
+    "monthly_cost": 197,
+    "category": "entertainment",
+    "billing_start_date": "01-11-25",
+    "trial_end_date": null,
+    "renewal_date": null,
+    "auto_pay": true,
+    "notes": "",
+    "last_billed_amount": 197,
+    "notified": []
+  }
+]

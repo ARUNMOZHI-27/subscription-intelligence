@@ -1,0 +1,46 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:ics.py - http://git.io/lLljaA
+BEGIN:VEVENT
+DESCRIPTION:YouTube Music renews. Monthly cost: ₹189
+DTSTART:20260104T000000Z
+SUMMARY:Subscription renews: YouTube Music
+UID:30d46b03-5ee7-4796-9ff0-574f313cc363@30d4.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:chatgpt renews. Monthly cost: ₹1997
+DTSTART:20260124T000000Z
+SUMMARY:Subscription renews: chatgpt
+UID:5eb1e63a-d298-4fd0-b3c9-1ceacfd2d386@5eb1.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:spotify renews. Monthly cost: ₹199
+DTSTART:20260102T000000Z
+SUMMARY:Subscription renews: spotify
+UID:86ad68ca-dcd1-431d-8445-8fe325db50b1@86ad.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Free trial ends for Gemini AI. Cost: ₹1950/month
+DTSTART:20251231T000000Z
+SUMMARY:Trial ends: Gemini AI
+UID:f30c6215-dfcd-4414-91fb-5ef7e42bb0ca@f30c.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Gemini AI renews. Monthly cost: ₹1950
+DTSTART:20260101T000000Z
+SUMMARY:Subscription renews: Gemini AI
+UID:ec91bffc-b8db-4db5-a39d-918439b211b3@ec91.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Free trial ends for spotify. Cost: ₹199/month
+DTSTART:20260303T000000Z
+SUMMARY:Trial ends: spotify
+UID:4dfcb340-30dc-4b00-a1f4-df474c5bf259@4dfc.org
+END:VEVENT
+BEGIN:VEVENT
+DESCRIPTION:Free trial ends for YouTube Music. Cost: ₹189/month
+DTSTART:20260503T000000Z
+SUMMARY:Trial ends: YouTube Music
+UID:e2009521-349f-4144-9691-fe38aec4ebd4@e200.org
+END:VEVENT
+END:VCALENDAR

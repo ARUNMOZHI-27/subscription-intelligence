@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "subscription-intelligence"
+version = "0.1.0"
+description = "Autonomous subscription intelligence agent with MCP and LLM support"
+readme = "README.md"
+requires-python = ">=3.10"
+
+authors = [
+  { name = "Mozhi" }
+]
+
+dependencies = [
+  "python-dotenv",
+  "rich",
+  "pydantic",
+  "python-dateutil",
+   "requests"
+]
+
+[project.scripts]
+subscription-intelligence = "subscription_operator:main"
+
+[tool.setuptools]
+py-modules = [
+  "agent",
+  "calendar_util",
+  "chat_cli",
+  "config",
+  "conversation_memory",
+  "intelligence",
+  "llm_explainer",
+  "llm_router",
+  "mcp_client",
+  "notifier",
+  "server",
+  "storage",
+  "subscription_mcp",
+  "subscription_operator"
+]
