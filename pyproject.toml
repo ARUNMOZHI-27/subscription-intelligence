@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 
 authors = [
-  { name = "Mozhi" }
+  { name = "Arunmozhi", email = "arunmozhi@example.com" }
 ]
 
 dependencies = [
@@ -18,26 +18,23 @@ dependencies = [
   "rich",
   "pydantic",
   "python-dateutil",
-   "requests"
+  "requests",
+  "mcp",
+  "fastmcp",
+  "streamlit"
 ]
 
-[project.scripts]
-subscription-intelligence = "subscription_operator:main"
+[project.optional-dependencies]
+dev = [
+  "pytest",
+  "pytest-cov"
+]
 
 [tool.setuptools]
-py-modules = [
-  "agent",
-  "calendar_util",
-  "chat_cli",
-  "config",
-  "conversation_memory",
-  "intelligence",
-  "llm_explainer",
-  "llm_router",
-  "mcp_client",
-  "notifier",
-  "server",
-  "storage",
-  "subscription_mcp",
-  "subscription_operator"
-]
+packages = ["subscription_intelligence_mcp"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra"
+testpaths = ["tests"]
+pythonpath = ["."]
