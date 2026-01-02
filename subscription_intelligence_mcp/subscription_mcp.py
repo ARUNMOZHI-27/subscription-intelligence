@@ -1,8 +1,6 @@
 from mcp.server.fastmcp import FastMCP
 from typing import Optional, Dict, List
-import traceback
 
-from agent_state import get_state
 from storage import load_subscriptions, save_subscriptions
 from intelligence import (
     generate_monthly_summary,
@@ -10,8 +8,17 @@ from intelligence import (
     analyze_duplicates,
     calculate_annual_savings
 )
-from llm_explainer import explain_alert
 from calendar_export import export_calendar
+from llm_explainer import explain_alert
+from agent_state import get_state
+
+from validators import (
+    validate_name,
+    validate_monthly_cost,
+    validate_category,
+    validate_date,
+    ValidationError
+)
 
 mcp = FastMCP("Subscription Intelligence MCP")
 
@@ -22,10 +29,7 @@ mcp = FastMCP("Subscription Intelligence MCP")
 @mcp.tool()
 def status() -> Dict:
     """Show agent runtime status"""
-    try:
-        return get_state()
-    except Exception as e:
-        return {"error": str(e)}
+    return get_state()
 
 # -----------------------
 # CORE TOOLS
@@ -37,6 +41,7 @@ def list_subscriptions() -> List[Dict]:
         return load_subscriptions()
     except Exception as e:
         return [{"error": str(e)}]
+
 
 @mcp.tool()
 def add_subscription(
@@ -50,19 +55,19 @@ def add_subscription(
     notes: Optional[str] = None
 ) -> Dict:
     try:
-        # Basic validation
-        if not name or not category:
-            return {"status": "error", "message": "Name and category are required"}
+        name = validate_name(name)
+        monthly_cost = validate_monthly_cost(monthly_cost)
+        category = validate_category(category)
 
-        if monthly_cost < 0:
-            return {"status": "error", "message": "Monthly cost must be positive"}
+        billing_start_date = validate_date(billing_start_date)
+        trial_end_date = validate_date(trial_end_date)
+        renewal_date = validate_date(renewal_date)
 
         subs = load_subscriptions()
-
         subs.append({
-            "name": name.strip(),
-            "monthly_cost": int(monthly_cost),
-            "category": category.strip(),
+            "name": name,
+            "monthly_cost": monthly_cost,
+            "category": category,
             "billing_start_date": billing_start_date,
             "trial_end_date": trial_end_date,
             "renewal_date": renewal_date,
@@ -73,11 +78,17 @@ def add_subscription(
         })
 
         save_subscriptions(subs)
-        return {"status": "success", "message": f"{name} added"}
+
+        return {
+            "status": "success",
+            "message": f"{name} added successfully"
+        }
+
+    except ValidationError as e:
+        return {"status": "error", "message": str(e)}
 
     except Exception as e:
-        traceback.print_exc()
-        return {"status": "error", "message": str(e)}
+        return {"status": "error", "message": f"Unexpected error: {e}"}
 
 # -----------------------
 # ANALYSIS
@@ -95,6 +106,7 @@ def analyze_spend() -> Dict:
     except Exception as e:
         return {"error": str(e)}
 
+
 @mcp.tool()
 def get_monthly_summary() -> str:
     try:
@@ -103,7 +115,7 @@ def get_monthly_summary() -> str:
         return f"Error generating summary: {e}"
 
 # -----------------------
-# SMART SAVINGS (PHASE 2)
+# SMART SAVINGS
 # -----------------------
 
 @mcp.tool()
@@ -115,30 +127,25 @@ def recommend_savings() -> str:
         if not overlaps:
             return "✅ No overlapping subscriptions found."
 
-        savings_facts = []
-
+        facts = []
         for tag, _, _ in overlaps:
             category = tag.replace("duplicate_", "")
-            matching = [s for s in subs if s.get("category") == category]
+            matches = [s for s in subs if s.get("category") == category]
 
-            if len(matching) >= 2:
-                cheapest = min(matching, key=lambda x: x["monthly_cost"])
+            if len(matches) >= 2:
+                cheapest = min(matches, key=lambda x: x["monthly_cost"])
                 annual = calculate_annual_savings(cheapest["monthly_cost"])
-
-                savings_facts.append(
-                    f"Canceling one {category} service saves approximately ₹{annual}/year."
+                facts.append(
+                    f"Canceling one {category} subscription saves about ₹{annual} per year."
                 )
 
         prompt = (
-            "Here are concrete savings opportunities:\n"
-            + "\n".join(savings_facts)
-            + "\n\nExplain this gently to the user and suggest what to cancel."
+            "Here are the savings opportunities:\n"
+            + "\n".join(facts)
+            + "\n\nExplain this gently to the user."
         )
 
-        return explain_alert(
-            {"name": "Savings Advisor"},
-            prompt
-        )
+        return explain_alert({"name": "Savings Advisor"}, prompt)
 
     except Exception as e:
         return f"Error analyzing savings: {e}"
@@ -149,29 +156,21 @@ def recommend_savings() -> str:
 
 @mcp.tool()
 def export_calendar_file() -> Dict:
-    """
-    Export subscriptions to a calendar (.ics) file
-    """
     try:
         subs = load_subscriptions()
-        file_path = export_calendar(subs)
-
+        file = export_calendar(subs)
         return {
             "status": "success",
-            "file": file_path,
-            "message": "Calendar file generated. Import subscriptions.ics into your calendar."
+            "file": file,
+            "message": "Calendar file generated successfully"
         }
-
     except Exception as e:
-        traceback.print_exc()
         return {"status": "error", "message": str(e)}
 
-# -----------------------
-# ENTRY POINT
-# -----------------------
 
 def start_mcp_server():
     mcp.run()
+
 
 if __name__ == "__main__":
     start_mcp_server()
