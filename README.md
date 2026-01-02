@@ -54,7 +54,7 @@ docker compose down
 
 ---
 
-🧪 Run Locally (Without Docker)
+## 🧪 Run Locally (Without Docker)
 
 pip install -r subscription_intelligence_mcp/requirements.txt
 python subscription_operator.py
@@ -62,7 +62,7 @@ python subscription_operator.py
 
 ---
 
-⚙️ Configuration
+## ⚙️ Configuration
 
 Create a .env file in the project root.
 
@@ -91,8 +91,10 @@ MONTHLY_SUBSCRIPTION_BUDGET=2500
 # =====================
 # LLM Settings
 # =====================
-OPENAI_API_KEY=sk-your-key-here
-LLM_MODEL=gpt-3.5-turbo
+
+OLLAMA_MODEL=llama3.2
+OLLAMA_TIMEOUT=120
+
 
 # =====================
 # Storage & Logs
@@ -101,7 +103,7 @@ DATA_DIR=/data
 LOG_DIR=/data/logs
 LOG_LEVEL=INFO
 
-⚠️ Important Notes
+## ⚠️ Important Notes
 
 Gmail requires App Password, not your real password
 
@@ -113,7 +115,7 @@ Docker users must mount /data as a volume
 
 ---
 
-🧰 MCP Tools Available
+## 🧰 MCP Tools Available
 
 Tool	Description
 
@@ -129,7 +131,7 @@ export_calendar_file()	Generate .ics calendar
 
 ---
 
-📖 Usage Examples
+## 📖 Usage Examples
 
 🐍 Python (MCP Client)
 
@@ -158,7 +160,7 @@ print(mcp.call_tool("recommend_savings"))
 
 ---
 
-💬 Chat CLI
+## 💬 Chat CLI
 
 python chat_cli.py
 
@@ -173,7 +175,7 @@ status
 
 ---
 
-📊 Dashboard (Streamlit)
+## 📊 Dashboard (Streamlit)
 
 streamlit run dashboard.py
 
@@ -191,7 +193,7 @@ Annual cost projection
 
 ---
 
-📁 Project Structure
+## 📁 Project Structure
 
 subscription-intelligence/
 ├── subscription_intelligence_mcp/
@@ -222,7 +224,7 @@ subscription-intelligence/
 
 ---
 
-🧠 How the Intelligence Works
+## 🧠 How the Intelligence Works
 
 1️⃣ Rules-Based Alerts
 
@@ -265,7 +267,7 @@ Smart deduplication prevents spam
 
 ---
 
-🐳 Docker Details
+## 🐳 Docker Details
 
 Build Image
 
@@ -282,7 +284,7 @@ docker run -d \
 
 ---
 
-🧪 Testing
+## 🧪 Testing
 
 pytest tests/ -v
 pytest --cov=subscription_intelligence_mcp
@@ -290,7 +292,7 @@ pytest --cov=subscription_intelligence_mcp
 
 ---
 
-🐛 Troubleshooting
+## 🐛 Troubleshooting
 
 Subscriptions not saving
 
@@ -320,6 +322,6 @@ Check logs for Python errors
 
 ---
 
-📜 License
+## 📜 License
 
 MIT License © 2026 Arunmozhi (ARUNMOZHI-27)
