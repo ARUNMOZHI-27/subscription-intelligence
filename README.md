@@ -49,13 +49,8 @@ Stop:
 
 docker compose down
 
-
----
-<<<<<<< HEAD
 ```
-=======
 
->>>>>>> 25a15e6d24d5074a30657dda13fd5a89b6598a9c
 ## 🧪 Run Locally (Without Docker)
 
 pip install -r subscription_intelligence_mcp/requirements.txt
@@ -64,10 +59,8 @@ python subscription_operator.py
 
 ---
 
-<<<<<<< HEAD
-
 =======
->>>>>>> 25a15e6d24d5074a30657dda13fd5a89b6598a9c
+
 ## ⚙️ Configuration
 
 Create a .env file in the project root.
@@ -100,15 +93,10 @@ MONTHLY_SUBSCRIPTION_BUDGET=2500
 # =====================
 # LLM Settings
 # =====================
-<<<<<<< HEAD
-OLLAMA_MODEL=llama3.2
-OLLAMA_TIMEOUT=120
-=======
 
 OLLAMA_MODEL=llama3.2
 OLLAMA_TIMEOUT=120
 
->>>>>>> 25a15e6d24d5074a30657dda13fd5a89b6598a9c
 
 # =====================
 # Storage & Logs
