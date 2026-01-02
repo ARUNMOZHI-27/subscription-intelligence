@@ -1,5 +1,3 @@
-
-
 ---
 
 # 🧠 Subscription Intelligence MCP
@@ -53,8 +51,8 @@ docker compose down
 
 
 ---
-
-🧪 Run Locally (Without Docker)
+```
+## 🧪 Run Locally (Without Docker)
 
 pip install -r subscription_intelligence_mcp/requirements.txt
 python subscription_operator.py
@@ -62,9 +60,13 @@ python subscription_operator.py
 
 ---
 
-⚙️ Configuration
+
+## ⚙️ Configuration
 
 Create a .env file in the project root.
+
+👉 A ready-to-use .env.example file is provided.
+Copy it and rename to .env before running.
 
 .env Example
 
@@ -91,8 +93,8 @@ MONTHLY_SUBSCRIPTION_BUDGET=2500
 # =====================
 # LLM Settings
 # =====================
-OPENAI_API_KEY=sk-your-key-here
-LLM_MODEL=gpt-3.5-turbo
+OLLAMA_MODEL=llama3.2
+OLLAMA_TIMEOUT=120
 
 # =====================
 # Storage & Logs
@@ -101,7 +103,7 @@ DATA_DIR=/data
 LOG_DIR=/data/logs
 LOG_LEVEL=INFO
 
-⚠️ Important Notes
+## ⚠️ Important Notes
 
 Gmail requires App Password, not your real password
 
@@ -113,7 +115,7 @@ Docker users must mount /data as a volume
 
 ---
 
-🧰 MCP Tools Available
+## 🧰 MCP Tools Available
 
 Tool	Description
 
@@ -129,13 +131,12 @@ export_calendar_file()	Generate .ics calendar
 
 ---
 
-📖 Usage Examples
+## 📖 Usage Examples
 
 🐍 Python (MCP Client)
 
 from subscription_mcp import mcp
 
-# Add a subscription
 mcp.call_tool("add_subscription", {
     "name": "Netflix",
     "monthly_cost": 499,
@@ -144,21 +145,18 @@ mcp.call_tool("add_subscription", {
     "auto_pay": True
 })
 
-# List subscriptions
 subs = mcp.call_tool("list_subscriptions")
 print(subs)
 
-# Spending analysis
 spend = mcp.call_tool("analyze_spend")
 print(spend)
 
-# Savings advice
 print(mcp.call_tool("recommend_savings"))
 
 
 ---
 
-💬 Chat CLI
+## 💬 Chat CLI
 
 python chat_cli.py
 
@@ -173,7 +171,7 @@ status
 
 ---
 
-📊 Dashboard (Streamlit)
+## 📊 Dashboard (Streamlit)
 
 streamlit run dashboard.py
 
@@ -191,7 +189,7 @@ Annual cost projection
 
 ---
 
-📁 Project Structure
+## 📁 Project Structure
 
 subscription-intelligence/
 ├── subscription_intelligence_mcp/
@@ -222,17 +220,17 @@ subscription-intelligence/
 
 ---
 
-🧠 How the Intelligence Works
+## 🧠 How the Intelligence Works
 
 1️⃣ Rules-Based Alerts
 
 Parses billing, trial, and renewal dates
 
-Triggers alerts at 7 / 3 / 1 day
+Triggers alerts at 7 / 3 / 1 days
 
 Detects duplicate categories
 
-Enforces budget limits
+Enforces monthly budget limits
 
 
 2️⃣ Spending Analysis
@@ -265,13 +263,13 @@ Smart deduplication prevents spam
 
 ---
 
-🐳 Docker Details
+## 🐳 Docker Details
 
-Build Image
+Build image:
 
 docker build -t subintel .
 
-Run Container
+Run container:
 
 docker run -d \
   --name subintel \
@@ -282,21 +280,21 @@ docker run -d \
 
 ---
 
-🧪 Testing
+## 🧪 Testing
 
-pytest tests/ -v
+pytest
 pytest --cov=subscription_intelligence_mcp
 
 
 ---
 
-🐛 Troubleshooting
+## 🐛 Troubleshooting
 
 Subscriptions not saving
 
 Ensure /data/subscriptions.json exists
 
-Check volume mount
+Check Docker volume mount
 
 Verify write permissions
 
@@ -320,6 +318,8 @@ Check logs for Python errors
 
 ---
 
-📜 License
+## 📜 License
 
 MIT License © 2026 Arunmozhi (ARUNMOZHI-27)
+
+---
