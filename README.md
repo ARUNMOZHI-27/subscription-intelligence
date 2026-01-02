@@ -59,7 +59,7 @@ python subscription_operator.py
 
 ---
 
-=======
+
 
 ## ⚙️ Configuration
 
@@ -69,7 +69,7 @@ Create a .env file in the project root.
 Copy it and rename to .env before running.
 
 .env Example
-
+```bash
 # =====================
 # Email Notifications
 # =====================
@@ -116,27 +116,25 @@ Docker users must mount /data as a volume
 
 
 ---
+```
 
 ## 🧰 MCP Tools Available
-
-Tool	Description
-
-list_subscriptions()	List all subscriptions
-add_subscription()	Add a new subscription
-analyze_spend()	Monthly + category spending
-recommend_savings()	Detect duplicates & savings
-get_monthly_summary()	Monthly overview
-status()	Agent runtime status
-export_calendar_file()	Generate .ics calendar
-
-
+| Tool                     | Description                 |
+| ------------------------ | --------------------------- |
+| `list_subscriptions()`   | List all subscriptions      |
+| `add_subscription()`     | Add a new subscription      |
+| `analyze_spend()`        | Monthly + category spending |
+| `recommend_savings()`    | Detect duplicates & savings |
+| `get_monthly_summary()`  | Monthly overview            |
+| `status()`               | Agent runtime status        |
+| `export_calendar_file()` | Generate `.ics` calendar    |
 
 ---
 
 ## 📖 Usage Examples
 
 🐍 Python (MCP Client)
-
+```bash 
 from subscription_mcp import mcp
 
 mcp.call_tool("add_subscription", {
@@ -155,13 +153,13 @@ print(spend)
 
 print(mcp.call_tool("recommend_savings"))
 
-
+```
 ---
 
 ## 💬 Chat CLI
-
+```bash
 python chat_cli.py
-
+```
 Example commands:
 
 show subscriptions
@@ -174,9 +172,9 @@ status
 ---
 
 ## 📊 Dashboard (Streamlit)
-
+```bash
 streamlit run dashboard.py
-
+```
 Dashboard includes:
 
 Subscription table
@@ -268,25 +266,25 @@ Smart deduplication prevents spam
 ## 🐳 Docker Details
 
 Build image:
-
+```bash
 docker build -t subintel .
-
+```
 Run container:
-
+```bash
 docker run -d \
   --name subintel \
   --env-file .env \
   -v $(pwd)/data:/data \
   subintel
 
-
+```
 ---
 
 ## 🧪 Testing
-
+```bash
 pytest
 pytest --cov=subscription_intelligence_mcp
-
+```
 
 ---
 
@@ -325,3 +323,5 @@ Check logs for Python errors
 MIT License © 2026 Arunmozhi (ARUNMOZHI-27)
 
 ---
+>Note:Coverage focuses on core logic and validation.
+>Runtime loops,dashboards, and notification transports are intentionally excluded
