@@ -1,5 +1,7 @@
 from mcp.server.fastmcp import FastMCP
 from typing import Optional, Dict, List
+import traceback
+
 from agent_state import get_state
 from storage import load_subscriptions, save_subscriptions
 from intelligence import (
@@ -10,20 +12,20 @@ from intelligence import (
 )
 from llm_explainer import explain_alert
 from calendar_export import export_calendar
-from storage import load_subscriptions
-
-
 
 mcp = FastMCP("Subscription Intelligence MCP")
 
 # -----------------------
-# STATUS TOOL (ONLY ONCE)
+# STATUS TOOL
 # -----------------------
 
 @mcp.tool()
 def status() -> Dict:
     """Show agent runtime status"""
-    return get_state()
+    try:
+        return get_state()
+    except Exception as e:
+        return {"error": str(e)}
 
 # -----------------------
 # CORE TOOLS
@@ -31,7 +33,10 @@ def status() -> Dict:
 
 @mcp.tool()
 def list_subscriptions() -> List[Dict]:
-    return load_subscriptions()
+    try:
+        return load_subscriptions()
+    except Exception as e:
+        return [{"error": str(e)}]
 
 @mcp.tool()
 def add_subscription(
@@ -44,21 +49,35 @@ def add_subscription(
     auto_pay: bool = True,
     notes: Optional[str] = None
 ) -> Dict:
-    subs = load_subscriptions()
-    subs.append({
-        "name": name,
-        "monthly_cost": monthly_cost,
-        "category": category,
-        "billing_start_date": billing_start_date,
-        "trial_end_date": trial_end_date,
-        "renewal_date": renewal_date,
-        "auto_pay": auto_pay,
-        "notes": notes or "",
-        "last_billed_amount": monthly_cost,
-        "notified": []
-    })
-    save_subscriptions(subs)
-    return {"status": "success", "message": f"{name} added"}
+    try:
+        # Basic validation
+        if not name or not category:
+            return {"status": "error", "message": "Name and category are required"}
+
+        if monthly_cost < 0:
+            return {"status": "error", "message": "Monthly cost must be positive"}
+
+        subs = load_subscriptions()
+
+        subs.append({
+            "name": name.strip(),
+            "monthly_cost": int(monthly_cost),
+            "category": category.strip(),
+            "billing_start_date": billing_start_date,
+            "trial_end_date": trial_end_date,
+            "renewal_date": renewal_date,
+            "auto_pay": auto_pay,
+            "notes": notes or "",
+            "last_billed_amount": monthly_cost,
+            "notified": []
+        })
+
+        save_subscriptions(subs)
+        return {"status": "success", "message": f"{name} added"}
+
+    except Exception as e:
+        traceback.print_exc()
+        return {"status": "error", "message": str(e)}
 
 # -----------------------
 # ANALYSIS
@@ -66,16 +85,22 @@ def add_subscription(
 
 @mcp.tool()
 def analyze_spend() -> Dict:
-    subs = load_subscriptions()
-    cat = analyze_category_spend(subs)
-    return {
-        "total_monthly_spend": sum(cat.values()),
-        "category_breakdown": cat
-    }
+    try:
+        subs = load_subscriptions()
+        cat = analyze_category_spend(subs)
+        return {
+            "total_monthly_spend": sum(cat.values()),
+            "category_breakdown": cat
+        }
+    except Exception as e:
+        return {"error": str(e)}
 
 @mcp.tool()
 def get_monthly_summary() -> str:
-    return generate_monthly_summary(load_subscriptions())
+    try:
+        return generate_monthly_summary(load_subscriptions())
+    except Exception as e:
+        return f"Error generating summary: {e}"
 
 # -----------------------
 # SMART SAVINGS (PHASE 2)
@@ -83,53 +108,70 @@ def get_monthly_summary() -> str:
 
 @mcp.tool()
 def recommend_savings() -> str:
-    subs = load_subscriptions()
-    overlaps = analyze_duplicates(subs)
+    try:
+        subs = load_subscriptions()
+        overlaps = analyze_duplicates(subs)
 
-    if not overlaps:
-        return "✅ No overlapping subscriptions found."
+        if not overlaps:
+            return "✅ No overlapping subscriptions found."
 
-    savings_facts = []
+        savings_facts = []
 
-    for tag, _, msg in overlaps:
-        category = tag.replace("duplicate_", "")
-        matching = [s for s in subs if s.get("category") == category]
+        for tag, _, _ in overlaps:
+            category = tag.replace("duplicate_", "")
+            matching = [s for s in subs if s.get("category") == category]
 
-        if len(matching) >= 2:
-            cheapest = min(matching, key=lambda x: x["monthly_cost"])
-            annual = calculate_annual_savings(cheapest["monthly_cost"])
+            if len(matching) >= 2:
+                cheapest = min(matching, key=lambda x: x["monthly_cost"])
+                annual = calculate_annual_savings(cheapest["monthly_cost"])
 
-            savings_facts.append(
-                f"Canceling one {category} service saves approximately ₹{annual}/year."
-            )
+                savings_facts.append(
+                    f"Canceling one {category} service saves approximately ₹{annual}/year."
+                )
 
-    prompt = (
-        "Here are concrete savings opportunities:\n" +
-        "\n".join(savings_facts) +
-        "\n\nExplain this gently to the user and suggest what to cancel."
-    )
+        prompt = (
+            "Here are concrete savings opportunities:\n"
+            + "\n".join(savings_facts)
+            + "\n\nExplain this gently to the user and suggest what to cancel."
+        )
 
-    return explain_alert(
-        {"name": "Savings Advisor"},
-        prompt
-    )
+        return explain_alert(
+            {"name": "Savings Advisor"},
+            prompt
+        )
+
+    except Exception as e:
+        return f"Error analyzing savings: {e}"
+
+# -----------------------
+# CALENDAR EXPORT
+# -----------------------
+
 @mcp.tool()
-def export_calendar_file() -> dict:
+def export_calendar_file() -> Dict:
     """
     Export subscriptions to a calendar (.ics) file
     """
-    subs = load_subscriptions()
-    file = export_calendar(subs)
-    return {
-        "status": "success",
-        "file": file,
-        "message": "Calendar file generated. Import subscriptions.ics into your calendar."
-    }
+    try:
+        subs = load_subscriptions()
+        file_path = export_calendar(subs)
 
+        return {
+            "status": "success",
+            "file": file_path,
+            "message": "Calendar file generated. Import subscriptions.ics into your calendar."
+        }
 
+    except Exception as e:
+        traceback.print_exc()
+        return {"status": "error", "message": str(e)}
+
+# -----------------------
+# ENTRY POINT
+# -----------------------
 
 def start_mcp_server():
     mcp.run()
 
-if __name__=="__main__":
-  start_mcp_server()
+if __name__ == "__main__":
+    start_mcp_server()

@@ -1,0 +1,61 @@
+{
+    "name": "subscription-intelligence",
+    "version": "0.1.0",
+    "description": "Autonomous subscription monitoring agent with billing alerts, duplicate detection, budget tracking, and LLM-powered explanations",
+    "author": "ARUNMOZHI-27",
+    "homepage": "https://github.com/ARUNMOZHI-27/subscription-intelligence",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/ARUNMOZHI-27/subscription-intelligence.git"
+    },
+    "license": "MIT",
+    "mcp-protocol-version": "0.1.0",
+    "runtime": "python",
+    "entrypoint": "subscription_intelligence_mcp/subscription_mcp.py",
+    "tools": [
+      {
+        "name": "list_subscriptions",
+        "description": "Retrieve all tracked subscriptions",
+        "inputSchema": { "type": "object", "properties": {} }
+      },
+      {
+        "name": "add_subscription",
+        "description": "Add a new subscription with billing and renewal details",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "monthly_cost": { "type": "integer" },
+            "category": { "type": "string" },
+            "billing_start_date": { "type": "string" },
+            "trial_end_date": { "type": "string" },
+            "renewal_date": { "type": "string" },
+            "auto_pay": { "type": "boolean" },
+            "notes": { "type": "string" }
+          },
+          "required": ["name", "monthly_cost", "category"]
+        }
+      },
+      {
+        "name": "analyze_spend",
+        "description": "Analyze total and category-wise subscription spending",
+        "inputSchema": { "type": "object", "properties": {} }
+      },
+      {
+        "name": "recommend_savings",
+        "description": "Detect overlapping subscriptions and recommend savings using rules + LLM",
+        "inputSchema": { "type": "object", "properties": {} }
+      },
+      {
+        "name": "get_monthly_summary",
+        "description": "Generate a monthly subscription summary",
+        "inputSchema": { "type": "object", "properties": {} }
+      },
+      {
+        "name": "status",
+        "description": "Get current agent runtime status",
+        "inputSchema": { "type": "object", "properties": {} }
+      }
+    ]
+  }
+  
